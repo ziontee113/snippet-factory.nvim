@@ -8,7 +8,7 @@ describe("fmt demonstration", function()
 		local want = "Hello Venus"
 		local got = fmt(placeholder, slots)
 
-		assert(want == got)
+		assert.are.same(want, got)
 	end)
 
 	it("works with 2 slots", function()
@@ -18,6 +18,38 @@ describe("fmt demonstration", function()
 		local want = "Hello Venus, how are you?"
 		local got = fmt(placeholder, slots)
 
-		assert(want == got)
+		assert.are.same(want, got)
+	end)
+
+	it("works with multi-line string", function()
+		local placeholder = [[
+Hello {}!
+{}
+        ]]
+		local slots = { "Venus", "How are you?" }
+
+		local want = [[
+Hello Venus!
+How are you?
+        ]]
+		local got = fmt(placeholder, slots)
+
+		assert.are.same(want, got)
+	end)
+
+	it("works with multi-line string, with indentation", function()
+		local placeholder = [[
+Hello {}!
+    {}
+        ]]
+		local slots = { "Venus", "How are you?" }
+
+		local want = [[
+Hello Venus!
+    How are you?
+        ]]
+		local got = fmt(placeholder, slots)
+
+		assert.are.same(want, got)
 	end)
 end)
