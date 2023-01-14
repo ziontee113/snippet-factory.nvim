@@ -87,3 +87,24 @@ end]]
         end
     )
 end)
+
+describe("get_selection_lines with reduce_indent option tests", function()
+    after_each(function()
+        vim.api.nvim_buf_delete(0, { force = true })
+    end)
+
+    it("works", function()
+        test_helpers.set_lines [[
+local myfunc = function()
+    -- TODO:
+end]]
+
+        vim.cmd "norm! jV"
+
+        local want = [[
+-- TODO:]]
+        local got = lib_get_text.get_selection_text({ reduce_indent = true })
+
+        assert.same(want, got)
+    end)
+end)

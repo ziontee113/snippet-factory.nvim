@@ -1,3 +1,5 @@
+local lib_strings = require "snippet-factory.lib.strings"
+
 local M = {}
 
 M.get_selection_lines = function()
@@ -28,8 +30,13 @@ M.get_selection_lines = function()
     return lines
 end
 
-M.get_selection_text = function()
+M.get_selection_text = function(opts)
+    opts = opts or {}
+
     local lines = M.get_selection_lines()
+
+    if opts.reduce_indent then lines = lib_strings.reduce_indent(lines) end
+
     return table.concat(lines, "\n")
 end
 
