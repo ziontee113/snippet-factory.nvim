@@ -1,6 +1,6 @@
 local M = {}
 
-M.get_selection_text = function()
+M.get_selection_lines = function()
     local start_row, start_col = vim.fn.line "v", vim.fn.col "v"
     local end_row, end_col = vim.fn.line ".", vim.fn.col "."
 
@@ -11,9 +11,9 @@ M.get_selection_text = function()
         end_row, end_col = vim.fn.line "v", vim.fn.col "v"
     end
 
-    local text
+    local lines
     if vim.fn.mode() == "v" then
-        text = vim.api.nvim_buf_get_text(
+        lines = vim.api.nvim_buf_get_text(
             0,
             start_row - 1,
             start_col - 1,
@@ -22,10 +22,15 @@ M.get_selection_text = function()
             {}
         )
     elseif vim.fn.mode() == "V" then
-        text = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+        lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
     end
 
-    return text
+    return lines
+end
+
+M.get_selection_text = function()
+    local lines = M.get_selection_lines()
+    return table.concat(lines, "\n")
 end
 
 return M
