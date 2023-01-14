@@ -11,46 +11,95 @@ local works = function(msg, body, norm_cmd, want)
     end)
 end
 
-describe("combines lib.fmt with lib.get_text.get_selection_text", function()
-    before_each(function()
-        test_helpers.set_lines [[
+describe(
+    "combines fmt() with get_selection_text(), placeholder only",
+    function()
+        before_each(function()
+            test_helpers.set_lines [[
 local my_var = 100
 local lib = require("lib.module")]]
-    end)
+        end)
 
-    after_each(function()
-        vim.api.nvim_buf_delete(0, { force = true })
-    end)
+        after_each(function()
+            vim.api.nvim_buf_delete(0, { force = true })
+        end)
 
-    works(
-        "placeholder only, single line V selection",
-        [[{body}]],
-        "V",
-        [[local my_var = 100]]
-    )
+        works(
+            "single line V selection",
+            [[{body}]],
+            "V",
+            [[local my_var = 100]]
+        )
 
-    works(
-        "placeholder only, multiple lines V selection",
-        [[{body}]],
-        "Vj",
-        [[
+        works(
+            "multiple lines V selection",
+            [[{body}]],
+            "Vj",
+            [[
 local my_var = 100
 local lib = require("lib.module")]]
-    )
+        )
 
-    works(
-        "placeholder only, part of single line v selection",
-        [[{body}]],
-        "vee",
-        [[local my_var]]
-    )
+        works(
+            "part of single line v selection",
+            [[{body}]],
+            "vee",
+            [[local my_var]]
+        )
 
-    works(
-        "placeholder only, part of 2 lines v selection",
-        [[{body}]],
-        "vjee",
-        [[
+        works(
+            "part of 2 lines v selection",
+            [[{body}]],
+            "vjee",
+            [[
 local my_var = 100
 local lib]]
-    )
-end)
+        )
+    end
+)
+
+describe(
+    "combines fmt() with get_selection_text(), placeholder with surrounding contents",
+    function()
+        before_each(function()
+            test_helpers.set_lines [[
+local my_var = 100
+local lib = require("lib.module")]]
+        end)
+
+        after_each(function()
+            vim.api.nvim_buf_delete(0, { force = true })
+        end)
+
+        works(
+            "single line V selection",
+            [[
+local function my_func()
+    {body}
+end
+]],
+            "V",
+            [[
+local function my_func()
+    local my_var = 100
+end
+]]
+        )
+
+        works(
+            "2 lines V selection",
+            [[
+local function my_func()
+    {body}
+end
+]],
+            "Vj",
+            [[
+local function my_func()
+    local my_var = 100
+local lib = require("lib.module")
+end
+]]
+        )
+    end
+)

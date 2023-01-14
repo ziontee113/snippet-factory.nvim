@@ -22,10 +22,12 @@ describe("module.split_string_to_table", function()
                 "hello",
                 "venus",
             },
-            lib_strings.split_string_to_table [[
+            vim.split(
+                [[
 hello
-venus
-        ]]
+venus]],
+                "\n"
+            )
         )
     end)
 end)

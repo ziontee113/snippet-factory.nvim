@@ -36,4 +36,54 @@ Wassup Beijing]]
 
         assert.same(want, got)
     end)
+
+    it("get_selection_text works with V selection", function()
+        test_helpers.set_lines [[
+Hello World.
+Wassup Beijing.]]
+
+        vim.cmd "norm! Vj"
+
+        local want = [[
+Hello World.
+Wassup Beijing.]]
+        local got = lib_get_text.get_selection_text()
+
+        assert.same(want, got)
+    end)
+
+    it("get_selection_text works with V selection with indentation", function()
+        test_helpers.set_lines [[
+Hello World.
+    Wassup Beijing.]]
+
+        vim.cmd "norm! Vj"
+
+        local want = [[
+Hello World.
+    Wassup Beijing.]]
+        local got = lib_get_text.get_selection_text()
+
+        assert.same(want, got)
+    end)
+
+    it(
+        "get_selection_text works with V selection with indentation case 2",
+        function()
+            test_helpers.set_lines [[
+local myfunc = function()
+    -- TODO: 
+end]]
+
+            vim.cmd "norm! VG"
+
+            local want = [[
+local myfunc = function()
+    -- TODO: 
+end]]
+            local got = lib_get_text.get_selection_text()
+
+            assert.same(want, got)
+        end
+    )
 end)
