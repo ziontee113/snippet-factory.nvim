@@ -15,19 +15,32 @@ describe("module.if_string_empty()", function()
     end)
 end)
 
-describe("module.split_string_to_table", function()
-    it("working", function()
-        assert.same(
-            {
-                "hello",
-                "venus",
-            },
-            vim.split(
-                [[
-hello
-venus]],
-                "\n"
-            )
-        )
+describe("module.reduce_indent()", function()
+    it("works with same level of indentation", function()
+        local input = [[
+    Hello
+    Venus]]
+
+        local want = [[
+Hello
+Venus]]
+
+        local got = lib_strings.reduce_indent(input)
+
+        assert.equals(want, got)
+    end)
+
+    it("works with different level of indentation", function()
+        local input = [[
+    Hello
+        Venus]]
+
+        local want = [[
+Hello
+    Venus]]
+
+        local got = lib_strings.reduce_indent(input)
+
+        assert.equals(want, got)
     end)
 end)
