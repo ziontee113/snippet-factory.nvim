@@ -52,4 +52,20 @@ Hello Venus!
 
         assert.are.same(want, got)
     end)
+
+    it("works with named placeholders", function()
+        local placeholder = [[
+Hello {name}!
+    {msg}
+        ]]
+        local slots = { msg = "How are you?", name = "Venus" }
+
+        local want = [[
+Hello Venus!
+    How are you?
+        ]]
+        local got = fmt(placeholder, slots)
+
+        assert.are.same(want, got)
+    end)
 end)

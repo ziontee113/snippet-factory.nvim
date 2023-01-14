@@ -1,7 +1,5 @@
 local test_helpers = require "snippet-factory.lib.test_helpers"
-
 local lib_get_text = require "snippet-factory.lib.get_text"
-local lib_strings = require "snippet-factory.lib.strings"
 
 describe("get_selection_lines tests", function()
     after_each(function()
@@ -11,8 +9,7 @@ describe("get_selection_lines tests", function()
     it("works", function()
         test_helpers.set_lines [[
 Hello World.
-Wassup Beijing.
-        ]]
+Wassup Beijing.]]
 
         vim.cmd "norm! wvje"
 
@@ -28,8 +25,7 @@ Wassup Beijing.
     it("get_selection_text works", function()
         test_helpers.set_lines [[
 Hello World.
-Wassup Beijing.
-            ]]
+Wassup Beijing.]]
 
         vim.cmd "norm! wvje"
 
