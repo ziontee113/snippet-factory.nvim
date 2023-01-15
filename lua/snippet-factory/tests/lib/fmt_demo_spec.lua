@@ -69,7 +69,6 @@ Hello Venus!
         assert.are.same(want, got)
     end)
 
-    -- TODO: make indentation works.
     it("works with multi lines body", function()
         local placeholder = [[
 Hello {name}!
@@ -78,26 +77,14 @@ Hello {name}!
         local slots =
             { msg = "How are you?\nWhere are you from?", name = "Venus" }
 
-        -- we actually want this kind of indentation
-        -- where every new line in the msg gets indented correctly
-        -- relative to placeholder's position.
-        -- will need to be implemented
-        -- since we didn't write fmt(), we'll have to make this compromise
-        -- Question how is: does this PREVENT the project from moving forward?
-        ---- I don't know yet. But I have a feeling that it will for sure.
         local want = [[
 Hello Venus!
     How are you?
     Where are you from?
         ]]
 
-        local compromise = [[
-Hello Venus!
-    How are you?
-Where are you from?
-        ]]
         local got = fmt(placeholder, slots)
 
-        assert.are.same(compromise, got)
+        assert.are.same(want, got)
     end)
 end)

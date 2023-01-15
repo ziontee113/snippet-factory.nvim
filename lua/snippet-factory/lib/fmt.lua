@@ -57,12 +57,14 @@ local function interpolate(fmt, args, opts)
     }
 
     -- manage insertion of text/args
+    local elements_are_args = {}
     local elements = {}
     local last_index = 0
     local used_keys = {}
 
     local add_text = function(text)
         if #text > 0 then table.insert(elements, text) end
+        if #text > 0 then table.insert(elements_are_args, false) end
     end
     local add_arg = function(placeholder)
         local num = tonumber(placeholder)
@@ -93,6 +95,8 @@ local function interpolate(fmt, args, opts)
             table.insert(elements, args[key])
             used_keys[key] = true
         end
+
+        table.insert(elements_are_args, true)
     end
 
     -- iterate keeping a range from previous match, e.g. (not in_placeholder vs in_placeholder)
@@ -155,7 +159,29 @@ local function interpolate(fmt, args, opts)
         end
     end
 
-    return table.concat(elements)
+    -- Equalize Multi Line Args
+    local equalize_multi_line_text = function(str, spaces)
+        local lines = vim.split(str, "\n")
+        for i = 2, #lines do
+            lines[i] = string.rep(" ", spaces) .. lines[i]
+        end
+        return table.concat(lines, "\n")
+    end
+
+    local result = ""
+    for i, e in ipairs(elements) do
+        local lines = vim.split(result, "\n")
+        local last_line = lines[#lines]
+        if elements_are_args[i] then
+            local last_line_trimmed = string.gsub(last_line, "^ +", "")
+            local spaces_len = #last_line - #last_line_trimmed
+            if spaces_len > 0 then
+                e = equalize_multi_line_text(e, spaces_len)
+            end
+        end
+        result = result .. e
+    end
+    return result
 end
 
 return interpolate

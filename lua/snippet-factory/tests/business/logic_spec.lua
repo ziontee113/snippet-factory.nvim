@@ -97,7 +97,7 @@ end
             [[
 local function my_func()
     local my_var = 100
-local lib = require("lib.module")
+    local lib = require("lib.module")
 end
 ]]
         )
