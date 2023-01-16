@@ -9,7 +9,7 @@ M.create_snippet = function(placeholder, trigger)
         body = lib_get_text.get_selection_text(),
     }
 
-    return fmt(placeholder, slots)
+    return fmt(placeholder, slots, { replace_curly_braces = true })
 end
 
 return M

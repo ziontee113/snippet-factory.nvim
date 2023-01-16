@@ -172,7 +172,14 @@ local function interpolate(fmt, args, opts)
     for i, e in ipairs(elements) do
         local lines = vim.split(result, "\n")
         local last_line = lines[#lines]
-        if elements_are_args[i] then
+        if elements_are_args[i] then -- if this element was passed in as `arg`
+            -- If this element is an `arg` --> replace `{}` with `{{}}`
+            if opts.replace_curly_braces then
+                e = string.gsub(e, "{", "{{")
+                e = string.gsub(e, "}", "}}")
+            end
+
+            -- Equalize multi-line args
             local last_line_trimmed = string.gsub(last_line, "^ +", "")
             local spaces_len = #last_line - #last_line_trimmed
             if spaces_len > 0 then
@@ -181,6 +188,7 @@ local function interpolate(fmt, args, opts)
         end
         result = result .. e
     end
+
     return result
 end
 

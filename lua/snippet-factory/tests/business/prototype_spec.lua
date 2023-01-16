@@ -7,12 +7,15 @@ describe("prototyping, combining functionalities together", function()
     end)
 
     it("gets selection text, turn it into a snippet", function()
+        -- setup environment
         test_helpers.set_lines [[
-local x = 100
-local y = 800
+vim.keymap.set("n", "my_mapping", function()
+    -- TODO: 
+end, {})
 ]]
-        vim.cmd "norm! Vj"
+        vim.cmd "norm! Vjj"
 
+        -- define skeleton and trigger
         local snippet_skeleton = [[
 cs({{
     trigger = "{trigger}",
@@ -25,13 +28,15 @@ cs({{
 ]]
         local trigger = "myTrigger"
 
+        -- define want and got, then assert
         local want = [[
 cs({
     trigger = "myTrigger",
     nodes = fmt(
     [=[
-local x = 100
-local y = 800
+vim.keymap.set("n", "my_mapping", function()
+    -- TODO: 
+end, {{}})
 ]=]),
     target_table = snippets,
 })
