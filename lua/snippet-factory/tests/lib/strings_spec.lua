@@ -23,7 +23,7 @@ describe("module.reduce_indent()", function()
         local want = [[
 Hello]]
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
 
         assert.equals(want, got)
     end)
@@ -37,7 +37,7 @@ Hello]]
 Hello
 ]]
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
 
         assert.equals(want, got)
     end)
@@ -51,7 +51,7 @@ Hello
 Hello
 Venus]]
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
 
         assert.equals(want, got)
     end)
@@ -65,7 +65,7 @@ Venus]]
 Hello
     Venus]]
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
 
         assert.same(want, got)
     end)
@@ -81,7 +81,7 @@ Hello
         Something More
     Venus]]
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
 
         assert.same(want, got)
     end)
@@ -90,7 +90,7 @@ Hello
         local input = { "    -- TODO:" }
         local want = { "-- TODO:" }
 
-        local got = lib_strings.reduce_indent(input)
+        local got = lib_strings.dedent(input)
         assert.same(want, got)
     end)
 end)

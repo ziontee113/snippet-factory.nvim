@@ -103,7 +103,7 @@ end]]
 
         local want = [[
 -- TODO:]]
-        local got = lib_get_text.get_selection_text({ reduce_indent = true })
+        local got = lib_get_text.get_selection_text({ dedent = true })
 
         assert.same(want, got)
     end)

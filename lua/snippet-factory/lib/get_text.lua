@@ -35,7 +35,7 @@ M.get_selection_text = function(opts)
 
     local lines = M.get_selection_lines()
 
-    if opts.reduce_indent then lines = lib_strings.reduce_indent(lines) end
+    if opts.dedent then lines = lib_strings.dedent(lines) end
 
     return table.concat(lines, "\n")
 end

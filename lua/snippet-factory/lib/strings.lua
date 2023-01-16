@@ -18,7 +18,7 @@ end
 ---Will annoy `tab` users if kept like this
 ---@param input string|table
 ---@return any
-M.reduce_indent = function(input)
+M.dedent = function(input)
     local lines
     if type(input) == "table" then
         lines = input
