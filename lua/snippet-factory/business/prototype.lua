@@ -1,9 +1,11 @@
 local lib_get_text = require "snippet-factory.lib.get_text"
 local fmt = require "snippet-factory.lib.fmt"
+local filesystem = require "lua.snippet-factory.lib.filesystem"
 
 local M = {}
 
-M.create_snippet = function(placeholder, trigger)
+--- For testing purposes only
+M.__create_snippet_intergration_testing = function(placeholder, trigger)
     local args = {
         trigger = trigger,
         body = lib_get_text.get_selection_text({ dedent = true }),
@@ -19,13 +21,13 @@ cs({{
     nodes = fmt(
     [=[
 {body}
-]=]),
+]=], {{}}),
     target_table = snippets,
 }})
 ]]
 
     local args = {
-        trigger = "____",
+        trigger = "untitled_snippet",
         body = lib_get_text.get_selection_text({ dedent = true }),
     }
 
@@ -37,7 +39,17 @@ cs({{
             local snippet_content =
                 fmt(snippet_skeleton, args, { replace_curly_braces = true })
 
-            N(snippet_content)
+            local file_path =
+                "/home/ziontee113/.config/nvim/snippets/lua/extra.lua"
+
+            filesystem.write_to_file(
+                file_path,
+                vim.split(snippet_content, "\n")
+            )
+
+            require("luasnip.loaders").reload_file(vim.fn.expand(file_path)) -- LuaSnip hot reloading
+
+            -- TODO: now implement placeholders to the snippet
         end
     )
 end

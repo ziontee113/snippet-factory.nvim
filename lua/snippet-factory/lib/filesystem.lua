@@ -1,25 +1,27 @@
 local M = {}
 
-local uv = vim.loop
+M.write_to_file = function(file_path, new_lines)
+    local lines = vim.fn.readfile(file_path)
 
-M.readFileSync = function(path)
-    local fd = assert(uv.fs_open(path, "r", 438))
-
-    local stat = assert(uv.fs_fstat(fd))
-    local data = assert(uv.fs_read(fd, stat.size, 0))
-    assert(uv.fs_close(fd))
-
-    return data
-end
-
-M.writeFileSync = function(path, flag, lines)
-    local fd = assert(uv.fs_open(path, flag, 438))
-
-    for _, line in ipairs(lines) do
-        uv.fs_write(fd, line, -1)
+    local marker_start_idx = -1
+    for i, line in pairs(lines) do
+        if
+            line
+                == "-------------------------------------------------------------------------"
+            and lines[i + 2] == "return snippets, autosnippets"
+        then
+            marker_start_idx = i - 1
+            break
+        end
     end
 
-    uv.fs_close(fd)
+    if marker_start_idx ~= -1 then
+        for i, line in ipairs(new_lines) do
+            table.insert(lines, marker_start_idx + i, line)
+        end
+
+        vim.fn.writefile(lines, file_path)
+    end
 end
 
 return M
