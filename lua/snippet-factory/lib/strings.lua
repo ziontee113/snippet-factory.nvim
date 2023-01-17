@@ -74,16 +74,15 @@ M.replace_range =
                 table.insert(lines_to_delete, i)
             end
 
+            local start = lines[i]:sub(1, start_col - 1)
+            local _end = lines[i]:sub(end_col + 1)
+
             if i == start_row and i == end_row then
-                lines[i] = lines[i]:sub(1, start_col - 1)
-                    .. replacement
-                    .. lines[i]:sub(end_col + 1)
+                lines[i] = start .. replacement .. lines[i]:sub(end_col + 1)
             else
-                if i == start_row then
-                    lines[i] = lines[i]:sub(1, start_col - 1) .. replacement
-                end
+                if i == start_row then lines[i] = start .. replacement end
                 if i == end_row then
-                    lines[i] = lines[i]:sub(end_col + 1)
+                    lines[i] = _end
                     if M.if_string_empty(lines[i]) then
                         table.insert(lines_to_delete, i)
                     end

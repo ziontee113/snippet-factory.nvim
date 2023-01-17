@@ -129,7 +129,6 @@ end]]
 local name = {}]]
 
         local got = lib_strings.replace_range(input, "{}", 1, 14, 3, 3)
-        -- { 1, 14, 3, 3 }
         assert.are.same(want, got)
     end)
 end)

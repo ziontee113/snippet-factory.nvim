@@ -22,6 +22,9 @@ M.create_snippet_with_identifiers_replaced =
         )
         local root = lang_tree:parse()[1]:root()
 
+        local x_offset, y_offset = 0, 0
+        local x_line = 0
+
         local node_count = 1
         local iter_query = vim.treesitter.query.parse_query(lang, query)
         for _, matches, _ in iter_query:iter_matches(root) do
@@ -29,15 +32,34 @@ M.create_snippet_with_identifiers_replaced =
             local node_text = vim.treesitter.get_node_text(tsnode, 0)
             local start_row, start_col, end_row, end_col = tsnode:range()
 
+            local start_col_mod = start_col + 1
+            local end_col_mod = end_col
+
+            if x_line == start_row then
+                start_col_mod = start_col_mod + x_offset
+                end_col_mod = end_col_mod + x_offset
+            end
+
             ---@diagnostic disable-next-line: cast-local-type
             body_text = lib_strings.replace_range(
                 body_text,
                 left_special_delimiter .. right_special_delimiter,
-                start_row + 1,
-                start_col + 1,
-                end_row + 1,
-                end_col
+                start_row + y_offset + 1,
+                start_col_mod,
+                end_row + y_offset + 1,
+                end_col_mod
             )
+
+            -- offset processing
+            y_offset = y_offset - (end_row - start_row)
+            if x_line == start_row then
+                x_offset = x_offset
+                    - (end_col - start_col)
+                    + (#left_special_delimiter + #right_special_delimiter)
+            else
+                x_line = start_row
+                x_offset = 0
+            end
 
             if string.find(node_text, "\n") then node_text = "" end
             local insert_node =

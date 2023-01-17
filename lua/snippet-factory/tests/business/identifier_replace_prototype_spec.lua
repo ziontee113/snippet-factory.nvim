@@ -103,4 +103,85 @@ local name = {}
 
         assert.same(want, got)
     end)
+
+    it("works with multiple single-line node replacements", function()
+        -- setup environment
+        test_helpers.set_lines [[
+local first_var, second_var = 10, 20
+]]
+        vim.cmd "norm! V"
+
+        -- define custom tree-sitter query
+        local query = [[
+        ;; query
+        ((identifier) @cap)
+    ]]
+
+        -- define want and got, then assert
+        local want = [[
+cs({
+    trigger = "myTrigger",
+    nodes = fmt(
+        [=[
+local {}, {} = 10, 20
+]=],
+        {
+            i(1, "first_var"),
+            i(2, "second_var"),
+        }
+),
+    target_table = snippets,
+})
+]]
+        local got = ip.create_snippet_with_identifiers_replaced(
+            snippet_skeleton,
+            trigger,
+            query
+        )
+
+        assert.same(want, got)
+    end)
+
+    it("works with multiple multi-line node replacements", function()
+        -- setup environment
+        test_helpers.set_lines [[
+local number = function()
+    local x = 100
+end
+local name = function()
+    local x = 100
+end]]
+        vim.cmd "norm! VG"
+
+        -- define custom tree-sitter query
+        local query = [[
+        ;; query
+        ((function_definition) @cap)
+    ]]
+
+        -- define want and got, then assert
+        local want = [[
+cs({
+    trigger = "myTrigger",
+    nodes = fmt(
+        [=[
+local number = {}
+local name = {}
+]=],
+        {
+            i(1, ""),
+            i(2, ""),
+        }
+),
+    target_table = snippets,
+})
+]]
+        local got = ip.create_snippet_with_identifiers_replaced(
+            snippet_skeleton,
+            trigger,
+            query
+        )
+
+        assert.same(want, got)
+    end)
 end)
