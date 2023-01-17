@@ -34,21 +34,21 @@ end
 
         -- define want and got, then assert
         local want = [[
-cs({{
-    trigger = "{trigger}",
+cs({
+    trigger = "myTrigger",
     nodes = fmt(
         [=[
 local {} = function()
     local {} = 100    
 end
 ]=],
-        {{
+        {
             i(1, "name"),
             i(2, "x"),
-        }}
+        }
 ),
     target_table = snippets,
-}})
+})
 ]]
         local got = ip.create_snippet_with_identifiers_replaced(
             snippet_skeleton,

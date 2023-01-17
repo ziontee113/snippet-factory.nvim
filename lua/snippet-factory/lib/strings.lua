@@ -58,7 +58,7 @@ M.replace_range =
     ---@param start_col number
     ---@param end_row number
     ---@param end_col number
-    ---@return string
+    ---@return string|table
     function(input, replacement, start_row, start_col, end_row, end_col)
         local lines
         if type(input) == "table" then
@@ -93,6 +93,7 @@ M.replace_range =
             table.remove(lines, i)
         end
 
+        if type(input) == "table" then return lines end
         return table.concat(lines, "\n")
     end
 
