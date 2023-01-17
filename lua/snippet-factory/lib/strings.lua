@@ -84,13 +84,15 @@ M.replace_range =
                 end
                 if i == end_row then
                     lines[i] = lines[i]:sub(end_col + 1)
-                    if lines[i] == "" then table.insert(lines_to_delete, i) end
+                    if M.if_string_empty(lines[i]) then
+                        table.insert(lines_to_delete, i)
+                    end
                 end
             end
         end
 
-        for _, i in ipairs(lines_to_delete) do
-            table.remove(lines, i)
+        for i = #lines_to_delete, 1, -1 do
+            table.remove(lines, lines_to_delete[i])
         end
 
         if type(input) == "table" then return lines end

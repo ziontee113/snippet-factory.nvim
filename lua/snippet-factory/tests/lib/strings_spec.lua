@@ -124,13 +124,12 @@ end
         local input = [[
 local name = function()
     local x = 10
-end
-]]
+end]]
         local want = [[
-local name = {}
-]]
+local name = {}]]
 
         local got = lib_strings.replace_range(input, "{}", 1, 14, 3, 3)
+        -- { 1, 14, 3, 3 }
         assert.are.same(want, got)
     end)
 end)
