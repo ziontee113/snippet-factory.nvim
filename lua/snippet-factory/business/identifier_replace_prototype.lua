@@ -5,12 +5,14 @@ local fmt = require "snippet-factory.lib.fmt"
 local M = {}
 
 M.create_snippet_with_identifiers_replaced =
-    function(placeholder, trigger, query)
+    function(placeholder, trigger, query, body_text)
         local left_special_delimiter = "𓊆"
         local right_special_delimiter = "𓊇"
 
-        local body_text = lib_get_text.get_selection_text({ dedent = true })
+        body_text = body_text
+            or lib_get_text.get_selection_text({ dedent = true })
         local insert_nodes = {}
+        local og_body_text = vim.deepcopy(body_text)
 
         -- Treesitter magic
         local lang = "lua"
@@ -29,7 +31,7 @@ M.create_snippet_with_identifiers_replaced =
         local iter_query = vim.treesitter.query.parse_query(lang, query)
         for _, matches, _ in iter_query:iter_matches(root) do
             local tsnode = matches[1]
-            local node_text = vim.treesitter.get_node_text(tsnode, 0)
+            local node_text = vim.treesitter.get_node_text(tsnode, og_body_text)
             local start_row, start_col, end_row, end_col = tsnode:range()
 
             local start_col_mod = start_col + 1
@@ -81,4 +83,56 @@ M.create_snippet_with_identifiers_replaced =
         return result
     end
 
+local filesystem = require "lua.snippet-factory.lib.filesystem"
+
+M.input_trigger_then_create_snippet = function()
+    local snippet_skeleton = [[
+cs({{
+    trigger = "{trigger}",
+    nodes = fmt(
+        [=[
+{body}
+]=],
+        {{
+            {nodes}
+        }}
+),
+    target_table = snippets,
+}})
+]]
+    local query = [[
+    ;; query
+    ((identifier) @cap)
+]]
+
+    local body_text = lib_get_text.get_selection_text({ dedent = true })
+
+    vim.ui.input(
+        { prompt = "Please enter Trigger for this Snippet" },
+        function(trigger)
+            local snippet_content = M.create_snippet_with_identifiers_replaced(
+                snippet_skeleton,
+                trigger,
+                query,
+                body_text
+            )
+
+            local file_path =
+                "/home/ziontee113/.config/nvim/snippets/lua/extra.lua"
+
+            filesystem.write_to_file(
+                file_path,
+                vim.split(snippet_content, "\n")
+            )
+
+            require("luasnip.loaders").reload_file(vim.fn.expand(file_path))
+        end
+    )
+end
+
+vim.keymap.set("x", "<leader>x", function()
+    M.input_trigger_then_create_snippet()
+end, {})
+
 return M
+-- {{{nvim-execute-on-save}}}

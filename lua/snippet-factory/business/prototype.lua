@@ -49,8 +49,6 @@ cs({{
             require("luasnip.loaders").reload_file(vim.fn.expand(file_path)) -- LuaSnip hot reloading
 
             -- TODO: use lines as tables instead of concat them to string then split them up again.
-
-            -- TODO: turn (identifier) into placeholders & insert nodes
         end
     )
 end
