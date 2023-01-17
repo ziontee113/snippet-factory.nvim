@@ -34,6 +34,12 @@ M.create_snippet_with_identifiers_replaced =
             local node_text = vim.treesitter.get_node_text(tsnode, og_body_text)
             local start_row, start_col, end_row, end_col = tsnode:range()
 
+            -- handle x_offset
+            if start_row ~= x_line then
+                x_line = start_row
+                x_offset = 0
+            end
+
             local start_col_mod = start_col + 1
             local end_col_mod = end_col
 
@@ -54,13 +60,12 @@ M.create_snippet_with_identifiers_replaced =
 
             -- offset processing
             y_offset = y_offset - (end_row - start_row)
+            -- handle x_offset, again!!
+            -- sequencing is all over the place, please refactor this!
             if x_line == start_row then
                 x_offset = x_offset
                     - (end_col - start_col)
                     + (#left_special_delimiter + #right_special_delimiter)
-            else
-                x_line = start_row
-                x_offset = 0
             end
 
             if string.find(node_text, "\n") then node_text = "" end
