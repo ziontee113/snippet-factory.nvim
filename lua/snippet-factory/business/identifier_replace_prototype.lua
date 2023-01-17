@@ -75,8 +75,8 @@ M.create_snippet_with_identifiers_replaced =
         }
 
         local result = fmt(placeholder, args, { replace_curly_braces = true })
-        result = result.gsub(result, left_special_delimiter, "{")
-        result = result.gsub(result, right_special_delimiter, "}")
+        result = result.gsub(result, vim.pesc(left_special_delimiter), "{")
+        result = result.gsub(result, vim.pesc(right_special_delimiter), "}")
 
         return result
     end
