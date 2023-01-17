@@ -174,7 +174,7 @@ local function interpolate(fmt, args, opts)
         local last_line = lines[#lines]
         if elements_are_args[i] then -- if this element was passed in as `arg`
             -- If this element is an `arg` --> replace `{}` with `{{}}`
-            if opts.replace_curly_braces then
+            if opts.delimiters == "{}" and opts.replace_curly_braces then
                 e = string.gsub(e, "{", "{{")
                 e = string.gsub(e, "}", "}}")
             end

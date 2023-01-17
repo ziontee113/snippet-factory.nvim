@@ -51,4 +51,49 @@ M.dedent = function(input)
     if type(input) == "string" then return table.concat(new_lines, "\n") end
 end
 
+M.replace_range =
+    ---@param input string
+    ---@param replacement string
+    ---@param start_row number
+    ---@param start_col number
+    ---@param end_row number
+    ---@param end_col number
+    ---@return string
+    function(input, replacement, start_row, start_col, end_row, end_col)
+        local lines
+        if type(input) == "table" then
+            lines = input
+        elseif type(input) == "string" then
+            lines = vim.split(input, "\n")
+        end
+
+        local lines_to_delete = {}
+        for i, _ in ipairs(lines) do
+            -- checks for lines to delete
+            if i > start_row and i < end_row then
+                table.insert(lines_to_delete, i)
+            end
+
+            if i == start_row and i == end_row then
+                lines[i] = lines[i]:sub(1, start_col - 1)
+                    .. replacement
+                    .. lines[i]:sub(end_col + 1)
+            else
+                if i == start_row then
+                    lines[i] = lines[i]:sub(1, start_col - 1) .. replacement
+                end
+                if i == end_row then
+                    lines[i] = lines[i]:sub(end_col + 1)
+                    if lines[i] == "" then table.insert(lines_to_delete, i) end
+                end
+            end
+        end
+
+        for _, i in ipairs(lines_to_delete) do
+            table.remove(lines, i)
+        end
+
+        return table.concat(lines, "\n")
+    end
+
 return M

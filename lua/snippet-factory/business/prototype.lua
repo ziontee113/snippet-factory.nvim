@@ -27,7 +27,6 @@ cs({{
 ]]
 
     local args = {
-        trigger = "untitled_snippet",
         body = lib_get_text.get_selection_text({ dedent = true }),
     }
 
@@ -49,7 +48,9 @@ cs({{
 
             require("luasnip.loaders").reload_file(vim.fn.expand(file_path)) -- LuaSnip hot reloading
 
-            -- TODO: now implement placeholders to the snippet
+            -- TODO: use lines as tables instead of concat them to string then split them up again.
+
+            -- TODO: turn (identifier) into placeholders & insert nodes
         end
     )
 end
