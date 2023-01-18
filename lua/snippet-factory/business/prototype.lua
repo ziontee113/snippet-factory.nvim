@@ -1,6 +1,6 @@
 local lib_get_text = require "snippet-factory.lib.get_text"
 local fmt = require "snippet-factory.lib.fmt"
-local filesystem = require "lua.snippet-factory.lib.filesystem"
+local filesystem = require "snippet-factory.lib.filesystem"
 
 local M = {}
 

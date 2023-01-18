@@ -1,5 +1,5 @@
 local lib_get_text = require "snippet-factory.lib.get_text"
-local lib_strings = require "lua.snippet-factory.lib.strings"
+local lib_strings = require "snippet-factory.lib.strings"
 local fmt = require "snippet-factory.lib.fmt"
 
 local M = {}
@@ -88,7 +88,7 @@ M.create_snippet_with_identifiers_replaced =
         return result
     end
 
-local filesystem = require "lua.snippet-factory.lib.filesystem"
+local filesystem = require "snippet-factory.lib.filesystem"
 
 M.input_trigger_then_create_snippet = function()
     local snippet_skeleton = [[
@@ -138,7 +138,7 @@ cs({{
     )
 end
 
-vim.keymap.set("x", "<leader>x", function()
+vim.keymap.set("x", "<leader>sc", function()
     M.input_trigger_then_create_snippet()
 end, {})
 
