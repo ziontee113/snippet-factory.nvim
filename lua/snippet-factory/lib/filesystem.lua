@@ -1,5 +1,6 @@
 local M = {}
 
+---REFACTOR: multiple variables / conditions are hard coded, refactor them
 M.write_to_file = function(file_path, new_lines)
     local lines = vim.fn.readfile(file_path)
 
