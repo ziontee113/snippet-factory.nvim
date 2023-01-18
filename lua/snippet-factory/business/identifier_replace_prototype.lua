@@ -108,6 +108,7 @@ cs({{
     local query = [[
     ;; query
     ((identifier) @cap)
+    ("string_content" @cap)
 ]]
 
     local body_text = lib_get_text.get_selection_text({ dedent = true })
@@ -132,6 +133,8 @@ cs({{
 
             require("luasnip.loaders").reload_file(vim.fn.expand(file_path))
         end
+
+        -- TODO: have TS node picker (kinda like TSP or Query Secretary) for customizing picking nodes
     )
 end
 
