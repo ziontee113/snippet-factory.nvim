@@ -1,3 +1,11 @@
+local highlight_groups = {
+    "GruvBoxAquaBold",
+    "GruvBoxOrangeBold",
+    "GruvBoxGreenBold",
+    "GruvBoxPurpleBold",
+    "GruvBoxYellowBold",
+}
+local highlight_index = 1
 local ns = vim.api.nvim_create_namespace "highlight_selection"
 
 local get_visual_range = function()
@@ -25,12 +33,27 @@ local highlight_selection = function(hl_group)
     )
 end
 
-vim.keymap.set("n", "cns", function()
+local highlight_selection_with_next_hl_group = function()
+    if highlight_index > #highlight_groups then highlight_index = 1 end
+
+    local hl_group = highlight_groups[highlight_index]
+    highlight_selection(hl_group)
+
+    highlight_index = highlight_index + 1
+end
+
+local clear_namespace = function()
     vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+    highlight_index = 1
+end
+
+vim.keymap.set("n", "cns", function()
+    clear_namespace()
 end, {})
 
 vim.keymap.set("x", "gj", function()
-    highlight_selection "GruvBoxAquaBold"
+    highlight_selection_with_next_hl_group()
+    vim.api.nvim_input "<Esc>"
 end, {})
 
 return {
