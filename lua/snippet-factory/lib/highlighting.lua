@@ -1,3 +1,5 @@
+local selection = require "snippet-factory.lib.selection"
+
 local highlight_groups = {
     "GruvBoxAquaBold",
     "GruvBoxOrangeBold",
@@ -8,20 +10,8 @@ local highlight_groups = {
 local highlight_index = 1
 local ns = vim.api.nvim_create_namespace "highlight_selection"
 
-local get_visual_range = function()
-    local start_row, start_col = vim.fn.line "v", vim.fn.col "v"
-    local end_row, end_col = vim.fn.line ".", vim.fn.col "."
-
-    if vim.fn.mode() == "V" then
-        start_col = 1
-        end_col = vim.fn.col "$"
-    end
-
-    return start_row, start_col, end_row, end_col
-end
-
 local highlight_selection = function(hl_group)
-    local start_row, start_col, end_row, end_col = get_visual_range()
+    local start_row, start_col, end_row, end_col = selection.get_visual_range()
 
     vim.highlight.range(
         0,
@@ -55,6 +45,8 @@ vim.keymap.set("x", "gj", function()
     highlight_selection_with_next_hl_group()
     vim.api.nvim_input "<Esc>"
 end, {})
+
+-- TODO: implement dot-repeat
 
 return {
     highlight_selection = highlight_selection,

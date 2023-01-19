@@ -59,3 +59,11 @@
 * We want the snippet creation / editing experience to be as "organic" (non-disruptive) to the user as possible.
 
 * How about implementing both and see what the user prefers?
+
+
+
+# Smart Snippet Creation / Editing
+
+## Update existing snippet from it's usage
+
+## Create snippets from repetitive code
