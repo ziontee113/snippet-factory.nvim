@@ -16,8 +16,7 @@ require "plenary.busted"
 
 -->
 
-local treesitter_dir =
-    "~/.local/share/nvim/site/pack/packer/opt/nvim-treesitter"
+local treesitter_dir = "~/.local/share/nvim/lazy/nvim-treesitter"
 vim.opt.rtp:append(treesitter_dir)
 
 -->
